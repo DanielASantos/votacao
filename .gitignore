@@ -1,0 +1,66 @@
+HELP.md
+.gradle
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### Variáveis de Ambiente ###
+.env
+.env.*
+!.env.example
+
+### Configurações Locais ###
+application-local.properties
+application-secret.properties
+application-dev.yml
+*.local.properties
+
+### Volumes e Dados Locais ###
+docker-data/
+.docker/
+postgres-data/
+kafka-logs/
+kafka-data/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Sistema Operacional ###
+.DS_Store
+Thumbs.db
