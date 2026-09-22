@@ -1,7 +1,8 @@
 package com.cooperativa.votacao.service;
 
 import com.cooperativa.votacao.dto.request.SessaoRequest;
-import com.cooperativa.votacao.exception.SessaoNaoEncontradaException;
+import com.cooperativa.votacao.dto.response.SessaoResponse;
+import com.cooperativa.votacao.exception.RegistroNaoEncontradoException;
 import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.model.Sessao;
 import com.cooperativa.votacao.repository.SessaoRepository;
@@ -22,18 +23,26 @@ public class SessaoService {
     }
 
     @Transactional
-    public Sessao abrirSessao(SessaoRequest request) {
+    public SessaoResponse abrirSessao(SessaoRequest request) {
 
-        Pauta pauta = pautaService.buscarPorId(request.pautaId());
+        Pauta pauta = pautaService.gerarProxyPauta(request.pautaId());
 
-        int minutosValidos = (request.tempoMinutos() != null && request.tempoMinutos() > 0) ? request.tempoMinutos() : 1;
-        LocalDateTime dataFechamento = LocalDateTime.now().plusMinutes(minutosValidos);
+        int minutos = (request.tempoMinutos() != null && request.tempoMinutos() > 0) ? request.tempoMinutos() : 1;
+        LocalDateTime dataFechamento = LocalDateTime.now().plusMinutes(minutos);
 
         Sessao sessao = new Sessao(pauta, LocalDateTime.now(), dataFechamento);
-        return repository.save(sessao);
+        Sessao nSessao = repository.save(sessao);
+
+        return SessaoResponse.from(nSessao);
     }
 
-    public Sessao buscarPorId(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new SessaoNaoEncontradaException("Sessao não encontrada."));
+    public SessaoResponse buscarPorId(UUID id) {
+        Sessao sessao = repository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Sessao não encontrada."));
+        return SessaoResponse.from(sessao);
+    }
+
+    public Boolean verificarSessaoFechada(UUID pautaId) {
+        Sessao sessao = repository.findByPautaId(pautaId);
+        return LocalDateTime.now().isAfter(sessao.getDataFechamento());
     }
 }

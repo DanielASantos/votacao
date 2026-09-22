@@ -1,7 +1,9 @@
 package com.cooperativa.votacao.service;
 
-import com.cooperativa.votacao.exception.PautaNaoEncontradaException;
-import com.cooperativa.votacao.exception.SalvarPautaException;
+import com.cooperativa.votacao.dto.request.PautaRequest;
+import com.cooperativa.votacao.dto.response.PautaResponse;
+import com.cooperativa.votacao.exception.RegistroNaoEncontradoException;
+import com.cooperativa.votacao.exception.ErroAoSalvarException;
 import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.repository.PautaRepository;
 import jakarta.transaction.Transactional;
@@ -18,15 +20,21 @@ public class PautaService {
     }
 
     @Transactional
-    public Pauta salvar(Pauta pauta) {
+    public PautaResponse salvar(PautaRequest request) {
         try {
-            return repository.save(pauta);
+            Pauta pauta = repository.save(request.toModel());
+            return PautaResponse.from(pauta);
         } catch (Exception e) {
-            throw new SalvarPautaException("Erro ao salvar nova pauta", e.getCause());
+            throw new ErroAoSalvarException("Erro ao salvar nova pauta", e.getCause());
         }
     }
 
-    public Pauta buscarPorId(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new PautaNaoEncontradaException("Pauta não encontrada."));
+    public PautaResponse buscarPorId(UUID id) {
+        Pauta pauta = repository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Pauta não encontrada."));
+        return PautaResponse.from(pauta);
+    }
+
+    public Pauta gerarProxyPauta(UUID id) {
+        return repository.getReferenceById(id);
     }
 }
