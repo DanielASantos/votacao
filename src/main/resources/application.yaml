@@ -21,3 +21,14 @@ spring:
     enabled: true
     locations: classpath:db/migration
     schemas: public
+
+  #Configuração do OpenAPI (Swagger)
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
+
+      operationsSorter: method
+      tagsSorter: alpha
+
+    api-docs:
+      path: /v3/api-docs
