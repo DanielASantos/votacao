@@ -27,8 +27,8 @@ public class VotoController {
         return ResponseEntity.ok(votoService.votarPauta(request));
     }
 
-    @GetMapping("/resultado/{id}")
-    public ResponseEntity<ResultadoVotacaoResponse>contabilizarVotos(@PathVariable UUID id) {
-        return ResponseEntity.ok(votoService.contabilizarVotos(id));
+    @GetMapping("/resultado/{pautaId}")
+    public ResponseEntity<ResultadoVotacaoResponse>contabilizarVotos(@PathVariable UUID pautaId) {
+        return ResponseEntity.ok(votoService.contabilizarVotos(pautaId));
     }
 }

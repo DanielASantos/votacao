@@ -27,8 +27,8 @@ public class SessaoController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(sessaoService.abrirSessao(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SessaoResponse> buscarPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(sessaoService.buscarPorId(id));
+    @GetMapping("/{sessaoId}")
+    public ResponseEntity<SessaoResponse> buscarPorId(@PathVariable UUID sessaoId) {
+        return ResponseEntity.ok(sessaoService.buscarPorId(sessaoId));
     }
 }

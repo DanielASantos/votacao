@@ -29,8 +29,8 @@ public class PautaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pautaService.salvar(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PautaResponse> buscarPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(pautaService.buscarPorId(id));
+    @GetMapping("/{pautaId}")
+    public ResponseEntity<PautaResponse> buscarPorId(@PathVariable UUID pautaId) {
+        return ResponseEntity.ok(pautaService.buscarPorId(pautaId));
     }
 }
