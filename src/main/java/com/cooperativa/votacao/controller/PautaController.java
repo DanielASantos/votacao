@@ -2,7 +2,6 @@ package com.cooperativa.votacao.controller;
 
 import com.cooperativa.votacao.dto.request.PautaRequest;
 import com.cooperativa.votacao.dto.response.PautaResponse;
-import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.service.PautaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,14 +26,11 @@ public class PautaController {
 
     @PostMapping
     public ResponseEntity<PautaResponse> criar(@RequestBody @Valid PautaRequest request) {
-        Pauta novaPauta = pautaService.salvar(request.toModel());
-        return ResponseEntity.status(HttpStatus.CREATED).body(PautaResponse.from(novaPauta));
+        return ResponseEntity.status(HttpStatus.CREATED).body(pautaService.salvar(request));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PautaResponse> buscarPorId(@PathVariable UUID id) {
-        System.out.println("ID " + id);
-        Pauta pauta = pautaService.buscarPorId(id);
-        return ResponseEntity.ok(PautaResponse.from(pauta));
+        return ResponseEntity.ok(pautaService.buscarPorId(id));
     }
 }

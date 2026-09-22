@@ -2,7 +2,6 @@ package com.cooperativa.votacao.controller;
 
 import com.cooperativa.votacao.dto.request.SessaoRequest;
 import com.cooperativa.votacao.dto.response.SessaoResponse;
-import com.cooperativa.votacao.model.Sessao;
 import com.cooperativa.votacao.service.SessaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,13 +24,11 @@ public class SessaoController {
 
     @PostMapping
     public ResponseEntity<SessaoResponse> abrirSessao(@RequestBody @Valid SessaoRequest request) {
-        Sessao sessao = sessaoService.abrirSessao(request);
-        return ResponseEntity.status(HttpStatus.OK.value()).body(SessaoResponse.from(sessao));
+        return ResponseEntity.status(HttpStatus.OK.value()).body(sessaoService.abrirSessao(request));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SessaoResponse> buscarPorId(@PathVariable UUID id) {
-        Sessao sessao = sessaoService.buscarPorId(id);
-        return ResponseEntity.ok(SessaoResponse.from(sessao));
+        return ResponseEntity.ok(sessaoService.buscarPorId(id));
     }
 }

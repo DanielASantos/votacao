@@ -1,6 +1,7 @@
 package com.cooperativa.votacao.dto.response;
 
 import com.cooperativa.votacao.model.Sessao;
+import com.cooperativa.votacao.model.enums.StatusSessao;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,7 +12,7 @@ public record SessaoResponse(
        String pauta,
        LocalDateTime dataAbertura,
        LocalDateTime dataFechamento,
-       String status
+       StatusSessao status
 
 ) {
     public static SessaoResponse from(Sessao sessao) {
@@ -20,15 +21,15 @@ public record SessaoResponse(
                 sessao.getPauta().getTitulo(),
                 sessao.getDataAbertura(),
                 sessao.getDataFechamento(),
-                statusSessao(sessao.getDataFechamento())
+                getStatus(sessao.getDataFechamento())
         );
     }
 
-    private static String statusSessao(LocalDateTime dataFechamento) {
+    private static StatusSessao getStatus(LocalDateTime dataFechamento) {
         if(LocalDateTime.now().isBefore(dataFechamento)) {
-            return "ABERTA";
+            return StatusSessao.ABERTA;
         }
-        return "FECHADA";
+        return StatusSessao.FECHADA;
     }
 
 }
