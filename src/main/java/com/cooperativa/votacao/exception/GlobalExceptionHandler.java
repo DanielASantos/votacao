@@ -72,4 +72,28 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CpfInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse cpfInvalido(CpfInvalidoException exception, HttpServletRequest request) {
+        return new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                exception.getMessage(),
+                request.getServletPath()
+        );
+    }
+
+    @ExceptionHandler(IntegracaoExternaException.class)
+    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
+    public ExceptionResponse integracaoExterna(IntegracaoExternaException exception, HttpServletRequest request) {
+        return new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                exception.getMessage(),
+                request.getServletPath()
+        );
+    }
+
 }

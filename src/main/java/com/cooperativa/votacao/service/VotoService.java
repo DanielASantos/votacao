@@ -3,9 +3,11 @@ package com.cooperativa.votacao.service;
 import com.cooperativa.votacao.dto.request.VotoRequest;
 import com.cooperativa.votacao.dto.response.ResultadoVotacaoResponse;
 import com.cooperativa.votacao.dto.response.VotoResponse;
+import com.cooperativa.votacao.exception.AssociadoNaoHabilitadoException;
 import com.cooperativa.votacao.exception.ErroAoSalvarException;
 import com.cooperativa.votacao.exception.SessaoFechadaException;
 import com.cooperativa.votacao.exception.VotoDuplicadoException;
+import com.cooperativa.votacao.integration.CpfValidationService;
 import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.model.Voto;
 import com.cooperativa.votacao.model.enums.ResultadoVotacao;
@@ -21,19 +23,26 @@ public class VotoService {
     private final VotoRepository repository;
     private final PautaService pautaService;
     private final SessaoService sessaoService;
+    private final CpfValidationService cpfValidationService;
 
     public VotoService(
             VotoRepository repository,
             PautaService pautaService,
-            SessaoService sessaoService)
+            SessaoService sessaoService,
+            CpfValidationService cpfValidationService)
     {
         this.repository = repository;
         this.pautaService = pautaService;
         this.sessaoService = sessaoService;
+        this.cpfValidationService = cpfValidationService;
     }
 
     @Transactional
     public VotoResponse votarPauta(VotoRequest votoRequest) {
+
+        if (!cpfValidationService.isEligibleToVote(votoRequest.associadoCpf())) {
+            throw new AssociadoNaoHabilitadoException("Associado não está habilitado para votar (UNABLE_TO_VOTE).");
+        }
 
         if (sessaoService.verificarSessaoFechada(votoRequest.pautaId())) {
             throw new SessaoFechadaException("Sessão de votação está encerrada.");
