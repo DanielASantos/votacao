@@ -8,12 +8,15 @@ import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.model.enums.ResultadoVotacao;
 import com.cooperativa.votacao.repository.PautaRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class PautaService {
+    private static final Logger log = LoggerFactory.getLogger(PautaService.class);
     private final PautaRepository repository;
 
     public PautaService(PautaRepository repository) {
@@ -24,8 +27,10 @@ public class PautaService {
     public PautaResponse salvar(PautaRequest request) {
         try {
             Pauta pauta = repository.save(request.toModel());
+            log.info("Pauta criada com sucesso: {}", pauta.getId());
             return PautaResponse.from(pauta);
         } catch (Exception e) {
+            log.error("Erro ao criar Pauta");
             throw new ErroAoSalvarException("Erro ao salvar nova pauta", e.getCause());
         }
     }
@@ -42,7 +47,14 @@ public class PautaService {
     @Transactional
     public Pauta alterarResultado(UUID pautaId, ResultadoVotacao resultadoVotacao) {
         Pauta pauta = repository.findById(pautaId).orElseThrow(() -> new RegistroNaoEncontradoException("Pauta não encontrada."));
-        pauta.setResultadoVotacao(resultadoVotacao);
-        return repository.save(pauta);
+
+        try {
+            pauta.setResultadoVotacao(resultadoVotacao);
+            log.info("Adicionado o status {} da votacao na Pauta {}", resultadoVotacao.name(), pautaId);
+            return repository.save(pauta);
+        } catch (Exception e) {
+            log.error("Erro ao adicionar resultado da votacao na pauta {}", pautaId);
+            throw new ErroAoSalvarException("Erro ao adicionar resultado da votacao na pauta", e.getCause());
+        }
     }
 }

@@ -4,6 +4,8 @@ import com.cooperativa.votacao.dto.request.PautaRequest;
 import com.cooperativa.votacao.dto.response.PautaResponse;
 import com.cooperativa.votacao.service.PautaService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/pautas")
 public class PautaController {
+    private static final Logger log = LoggerFactory.getLogger(PautaController.class);
     private final PautaService pautaService;
 
     public PautaController(PautaService pautaService) {
@@ -26,11 +29,13 @@ public class PautaController {
 
     @PostMapping
     public ResponseEntity<PautaResponse> criar(@RequestBody @Valid PautaRequest request) {
+        log.info("Recebimento da requisicao para criacao de nova pauta.");
         return ResponseEntity.status(HttpStatus.CREATED).body(pautaService.salvar(request));
     }
 
     @GetMapping("/{pautaId}")
     public ResponseEntity<PautaResponse> buscarPorId(@PathVariable UUID pautaId) {
+        log.info("Recebimento da requisicao para buscar pauta {}.", pautaId);
         return ResponseEntity.ok(pautaService.buscarPorId(pautaId));
     }
 }

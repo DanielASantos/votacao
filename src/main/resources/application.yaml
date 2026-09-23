@@ -37,3 +37,8 @@ spring:
     integration:
       user-info:
         url: ${USER_INFO_URL:https://user-info.herokuapp.com}
+
+  logging:
+    structured:
+      json:
+        enabled: true

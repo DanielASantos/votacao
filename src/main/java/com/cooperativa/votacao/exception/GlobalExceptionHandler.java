@@ -96,4 +96,27 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ContabilizarVotosException.class)
+    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
+    public ExceptionResponse contabilizarVotos(ContabilizarVotosException exception, HttpServletRequest request) {
+        return new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                exception.getMessage(),
+                request.getServletPath()
+        );
+    }
+
+    @ExceptionHandler(AbrirSessaoException.class)
+    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
+    public ExceptionResponse contabilizarVotos(AbrirSessaoException exception, HttpServletRequest request) {
+        return new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                exception.getMessage(),
+                request.getServletPath()
+        );
+    }
 }

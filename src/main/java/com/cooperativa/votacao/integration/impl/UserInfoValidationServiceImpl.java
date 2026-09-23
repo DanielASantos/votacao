@@ -24,10 +24,10 @@ public class UserInfoValidationServiceImpl implements CpfValidationService {
             return "ABLE_TO_VOTE".equalsIgnoreCase(response.status());
 
         } catch (FeignException.NotFound e) {
-            throw new CpfInvalidoException("O CPF informado é inválido ou não foi encontrado.");
+            throw new CpfInvalidoException("O CPF informado é inválido ou não foi encontrado.", e.getCause());
 
         } catch (FeignException e) {
-            throw new IntegracaoExternaException("Serviço de validação de CPF indisponível no momento.");
+            throw new IntegracaoExternaException("Serviço de validação de CPF indisponível no momento.", e.getCause());
         }
     }
 }
