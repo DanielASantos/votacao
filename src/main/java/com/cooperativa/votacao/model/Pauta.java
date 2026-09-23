@@ -1,7 +1,10 @@
 package com.cooperativa.votacao.model;
 
 
+import com.cooperativa.votacao.model.enums.ResultadoVotacao;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +21,8 @@ public class Pauta {
     private UUID id;
     private String titulo;
     private String descricao;
+    @Enumerated(EnumType.STRING)
+    private ResultadoVotacao resultadoVotacao = ResultadoVotacao.AGUARDANDO_VOTACAO;
 
     public Pauta(){
 
@@ -38,5 +43,11 @@ public class Pauta {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public ResultadoVotacao getResultadoVotacao() { return resultadoVotacao; }
+
+    public void setResultadoVotacao(ResultadoVotacao resultadoVotacao) {
+        this.resultadoVotacao = resultadoVotacao;
     }
 }

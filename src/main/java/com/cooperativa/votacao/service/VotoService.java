@@ -8,8 +8,10 @@ import com.cooperativa.votacao.exception.SessaoFechadaException;
 import com.cooperativa.votacao.exception.VotoDuplicadoException;
 import com.cooperativa.votacao.model.Pauta;
 import com.cooperativa.votacao.model.Voto;
+import com.cooperativa.votacao.model.enums.ResultadoVotacao;
 import com.cooperativa.votacao.model.enums.TipoVoto;
 import com.cooperativa.votacao.repository.VotoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class VotoService {
         this.sessaoService = sessaoService;
     }
 
+    @Transactional
     public VotoResponse votarPauta(VotoRequest votoRequest) {
 
         if (sessaoService.verificarSessaoFechada(votoRequest.pautaId())) {
@@ -53,6 +56,16 @@ public class VotoService {
     public ResultadoVotacaoResponse contabilizarVotos(UUID pautaId) {
         Long totalSim = repository.countByPautaIdAndVoto(pautaId, TipoVoto.SIM);
         Long totalNao = repository.countByPautaIdAndVoto(pautaId, TipoVoto.NAO);
-        return new ResultadoVotacaoResponse(pautaId, totalSim, totalNao);
+
+        ResultadoVotacao resultado;
+        if (totalSim.equals(totalNao)) {
+            resultado = ResultadoVotacao.EMPATE;
+            pautaService.alterarResultado(pautaId, resultado);
+            return ResultadoVotacaoResponse.from(pautaId, totalSim, totalNao, resultado);
+        }
+
+        resultado = (totalSim > totalNao) ? ResultadoVotacao.ACEITA : ResultadoVotacao.REJEITADA;
+        pautaService.alterarResultado(pautaId, resultado);
+        return ResultadoVotacaoResponse.from(pautaId, totalSim, totalNao, resultado);
     }
 }
